@@ -3,7 +3,7 @@
 Minecraft Language is a compiler from a custom language `mcl/mclang` to Minecraft's datapack functions `mcfunction`.
 
 Example:
-```toml
+```swift
 package example {
 
     @Load

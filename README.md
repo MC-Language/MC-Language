@@ -14,11 +14,11 @@ package example {
 ```
 #### The above will produce the following output:
  + A `loaders.mcfunction` file with the content:
-   ```
+   ```mcfunction
     function projectid:example/test.mcfunction
     ```
  + A `example/test.mcfunction` file with the content:
-   ```
+   ```mcfunction
     say @p "Hello, World!"
    ```
    

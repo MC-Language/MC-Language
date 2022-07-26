@@ -44,8 +44,9 @@ public class Compiler {
 
         List<String> tickData = new ArrayList<>();
         tickers.forEach((selector, functions) -> functions.forEach(f -> {
-            if (selector.isEmpty()) tickData.add(String.format("function %s:%s", project, f));
-            else tickData.add(String.format("execute as @e[%s] run function %s:%s", selector, project, f));
+            String substring = f.substring(0, f.length() - ".mcfunction".length());
+            if (selector.isEmpty()) tickData.add(String.format("function %s:%s", project, substring));
+            else tickData.add(String.format("execute as @e[%s] run function %s:%s", selector, project, substring));
         }));
 
         if (!tickData.isEmpty()) writeFunction("tickers.mcfunction", String.join("\n", tickData));

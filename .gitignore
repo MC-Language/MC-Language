@@ -1,3 +1,14 @@
+#Intellij
+.idea
+*.iml
+
+#MC Language
+*.mcfunction
+*.mcl
+*.mclang
+mcbuild
+mcsrc
+
 # Compiled class file
 *.class
 

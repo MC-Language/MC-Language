@@ -24,6 +24,43 @@ package example {
    
 It is expected by the person using this to manually add loaders.mcfunction to the load tag.
 
+```swift
+package all_example {
+
+    @Load
+    func load_func() {
+        run(`say Hello from load`)
+    }
+
+    @Tick
+    func tick_func() {
+        run(`say This is ran from a tick!`)
+    }
+    
+    @TypeTick(`player`)
+    func player_tick_func() {
+        run(`say This is ran from a player tick!`)
+    }
+    
+    @SelectTick(`type=player, limit=1`)
+    func player_tick_limit_func() {
+        run(`say This is ran from a player tick with a limit of 1!`)
+    }
+
+    func this_has_a_repeat() {
+        repeat(10) {
+            run(`say Repeat`)
+        }
+    }
+
+    func this_has_if() {
+        if(`block ~ ~-1 ~ minecraft:stone`) {
+            run(`say You are standing on stone!`)
+        }
+    }
+}
+```
+
 As this is just a thing I made in a day I am not sure if I will work on it that much but it is here for anyone to use.
 Some stuff I may add or am willing to accept a PR for are:
 

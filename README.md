@@ -56,6 +56,8 @@ package all_example {
     func this_has_if() {
         if(`block ~ ~-1 ~ minecraft:stone`) {
             run(`say You are standing on stone!`)
+        } else {
+            run(`say You are not standing on stone!`)
         }
     }
     
@@ -77,4 +79,4 @@ Some stuff I may add or am willing to accept a PR for are:
 - [ ] Add while loops.
 - [ ] Add breaks to loops.
 - [ ] Cache tickers and loaders into a tag. (Note: this will be harder for selector ticks.)
-- [ ] Add else statements. (Note: this is possible by having an intermediate function where if ran it will set a score to 1 and by default 0 so if its 0 then the else should run)
+- [x] Add else statements. (Note: this is possible by having an intermediate function where if ran it will set a score to 1 and by default 0 so if its 0 then the else should run)

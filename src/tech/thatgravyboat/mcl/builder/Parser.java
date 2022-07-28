@@ -76,7 +76,7 @@ public class Parser {
         return new McRepeat(project, path, Integer.parseInt(amount), funcs);
     }
 
-    private static McIf parseIf(String project, String packageId, String path, PeekableIterator<TokenPair> iterator) {
+    private static McFunctionData parseIf(String project, String packageId, String path, PeekableIterator<TokenPair> iterator) {
         String statement = parenthesis(iterator, Token.STRING);
         expectOrThrow(iterator, Token.OPEN_BRACKET);
         List<McFunctionData> funcs = new ArrayList<>();
@@ -84,6 +84,14 @@ public class Parser {
             funcs.add(parseToken(project, packageId, path + "/if/" + funcs.size(), iterator));
         }
         expectOrThrow(iterator, Token.CLOSED_BRACKET);
+        if (nextMatch(iterator, Token.ELSE::equals)) {
+            List<McFunctionData> elseFuncs = new ArrayList<>();
+            while (iterator.hasNext() && iterator.peek().token() != Token.CLOSED_BRACKET) {
+                elseFuncs.add(parseToken(project, packageId, path + "/else/" + elseFuncs.size(), iterator));
+            }
+            expectOrThrow(iterator, Token.CLOSED_BRACKET);
+            return new McIfElse(project, path, statement.substring(1, statement.length() - 1), funcs, elseFuncs);
+        }
         return new McIf(project, path, statement.substring(1, statement.length() - 1), funcs);
     }
 

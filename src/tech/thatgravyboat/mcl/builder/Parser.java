@@ -15,7 +15,7 @@ public class Parser {
         return parseClass(project, iterator);
     }
 
-    private static McFunctionData parseToken(String project, String path, PeekableIterator<TokenPair> iterator) {
+    private static McFunctionData parseToken(String project, String packageId, String path, PeekableIterator<TokenPair> iterator) {
         if (!iterator.hasNext()) {
             throw new IllegalArgumentException("Empty tokens list");
         }
@@ -25,9 +25,10 @@ public class Parser {
             throw new IllegalArgumentException("Empty tokens list");
         }
         return switch (token.token()) {
-            case REPEAT -> parseRepeat(project, path, iterator);
+            case REPEAT -> parseRepeat(project, packageId, path, iterator);
             case RUN -> parseRun(iterator);
-            case IF -> parseIf(project, path, iterator);
+            case IF -> parseIf(project, packageId, path, iterator);
+            case IDENTIFIER -> parseInternalFunction(token, project, packageId, iterator);
             default -> throw new IllegalArgumentException("Unknown token");
         };
     }
@@ -58,32 +59,49 @@ public class Parser {
 
         List<McFunctionData> funcs = new ArrayList<>();
         while (iterator.hasNext() && iterator.peek().token() != Token.CLOSED_BRACKET) {
-            funcs.add(parseToken(project, packageId + "/" + id.value() + "/" + funcs.size(), iterator));
+            funcs.add(parseToken(project, packageId, packageId + "/" + id.value() + "/" + funcs.size(), iterator));
         }
         expectOrThrow(iterator, Token.CLOSED_BRACKET);
         return new McFunction(load, tickId, packageId, id.value(), funcs);
     }
 
-    private static McRepeat parseRepeat(String project, String path, PeekableIterator<TokenPair> iterator) {
+    private static McRepeat parseRepeat(String project, String packageid, String path, PeekableIterator<TokenPair> iterator) {
         String amount = parenthesis(iterator, Token.INTEGER);
         expectOrThrow(iterator, Token.OPEN_BRACKET);
         List<McFunctionData> funcs = new ArrayList<>();
         while (iterator.hasNext() && iterator.peek().token() != Token.CLOSED_BRACKET) {
-            funcs.add(parseToken(project, path + "/repeat/" + funcs.size(), iterator));
+            funcs.add(parseToken(project, packageid, path + "/repeat/" + funcs.size(), iterator));
         }
         expectOrThrow(iterator, Token.CLOSED_BRACKET);
         return new McRepeat(project, path, Integer.parseInt(amount), funcs);
     }
 
-    private static McIf parseIf(String project, String path, PeekableIterator<TokenPair> iterator) {
+    private static McIf parseIf(String project, String packageId, String path, PeekableIterator<TokenPair> iterator) {
         String statement = parenthesis(iterator, Token.STRING);
         expectOrThrow(iterator, Token.OPEN_BRACKET);
         List<McFunctionData> funcs = new ArrayList<>();
         while (iterator.hasNext() && iterator.peek().token() != Token.CLOSED_BRACKET) {
-            funcs.add(parseToken(project, path + "/if/" + funcs.size(), iterator));
+            funcs.add(parseToken(project, packageId, path + "/if/" + funcs.size(), iterator));
         }
         expectOrThrow(iterator, Token.CLOSED_BRACKET);
         return new McIf(project, path, statement.substring(1, statement.length() - 1), funcs);
+    }
+
+    private static McInternalFunction parseInternalFunction(TokenPair token, String project, String packageId, PeekableIterator<TokenPair> iterator) {
+        switch (iterator.next().token()) {
+            case PERIOD -> {
+                var next = iterator.next();
+                expectOrThrow(next, Token.IDENTIFIER);
+                expectOrThrow(iterator, Token.OPEN_PARENTHESIS);
+                expectOrThrow(iterator, Token.CLOSED_PARENTHESIS);
+                return new McInternalFunction(project, token.value(), next.value());
+            }
+            case OPEN_PARENTHESIS -> {
+                expectOrThrow(iterator, Token.CLOSED_PARENTHESIS);
+                return new McInternalFunction(project, packageId, token.value());
+            }
+            default -> throw new ExpectTokenException(Token.OPEN_PARENTHESIS);
+        }
     }
 
     private static McRun parseRun(PeekableIterator<TokenPair> iterator) {
@@ -121,7 +139,6 @@ public class Parser {
     }
 
     private static String parenthesis(PeekableIterator<TokenPair> iterator, Token token) {
-        expectOrThrow(iterator, Token.OPEN_PARENTHESIS);
         TokenPair data = iterator.next();
         expectOrThrow(data, token);
         expectOrThrow(iterator, Token.CLOSED_PARENTHESIS);

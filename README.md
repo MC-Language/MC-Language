@@ -58,13 +58,18 @@ package all_example {
             run(`say You are standing on stone!`)
         }
     }
+    
+    func this_calls_a_function() {
+        this_has_if()
+        this_has_a_repeat()
+    }
 }
 ```
 
 As this is just a thing I made in a day I am not sure if I will work on it that much but it is here for anyone to use.
 Some stuff I may add or am willing to accept a PR for are:
 
-- [ ] Add for the ability to call functions from the same package without having to use the full path.
+- [x] Add for the ability to call functions from the same package without having to use the full path.
 - [ ] Add shorthand default functions for things like `print()` and such, Note: This is why `COMMA` token exists.
 - [ ] Add Wiki for all the things available.
 - [ ] Automatically add the `loaders.mcfunction` file to the load tag.

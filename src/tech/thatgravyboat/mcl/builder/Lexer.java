@@ -1,5 +1,7 @@
 package tech.thatgravyboat.mcl.builder;
 
+import java.util.function.Predicate;
+
 public class Lexer {
     private final StringBuilder data = new StringBuilder();
     private String value;
@@ -8,7 +10,7 @@ public class Lexer {
     private String error;
 
     public Lexer(String data) {
-        data.lines().forEachOrdered(this.data::append);
+        data.lines().map(text -> text.replaceAll("^\s*#.*$", "")).filter(Predicate.not(String::isBlank)).forEachOrdered(this.data::append);
         next();
     }
 

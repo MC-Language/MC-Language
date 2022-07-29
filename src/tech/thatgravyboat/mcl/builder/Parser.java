@@ -3,7 +3,10 @@ package tech.thatgravyboat.mcl.builder;
 import tech.thatgravyboat.mcl.lang.Package;
 import tech.thatgravyboat.mcl.lang.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class Parser {
@@ -27,7 +30,7 @@ public class Parser {
         return switch (token.token()) {
             case REPEAT -> parseRepeat(project, packageId, path, iterator);
             case RUN -> parseRun(iterator);
-            case IF -> parseIf(project, packageId, path, iterator);
+            case NOTIF, IF -> parseIf(token.token() == Token.NOTIF, project, packageId, path, iterator);
             case IDENTIFIER -> parseInternalFunction(token, project, packageId, iterator);
             default -> throw new IllegalArgumentException("Unknown token");
         };
@@ -76,7 +79,7 @@ public class Parser {
         return new McRepeat(project, path, Integer.parseInt(amount), funcs);
     }
 
-    private static McFunctionData parseIf(String project, String packageId, String path, PeekableIterator<TokenPair> iterator) {
+    private static McFunctionData parseIf(boolean not, String project, String packageId, String path, PeekableIterator<TokenPair> iterator) {
         String statement = parenthesis(iterator, Token.STRING);
         expectOrThrow(iterator, Token.OPEN_BRACKET);
         List<McFunctionData> funcs = new ArrayList<>();
@@ -90,9 +93,9 @@ public class Parser {
                 elseFuncs.add(parseToken(project, packageId, path + "/else/" + elseFuncs.size(), iterator));
             }
             expectOrThrow(iterator, Token.CLOSED_BRACKET);
-            return new McIfElse(project, path, statement.substring(1, statement.length() - 1), funcs, elseFuncs);
+            return new McIfElse(not, project, path, statement.substring(1, statement.length() - 1), funcs, elseFuncs);
         }
-        return new McIf(project, path, statement.substring(1, statement.length() - 1), funcs);
+        return new McIf(not, project, path, statement.substring(1, statement.length() - 1), funcs);
     }
 
     private static McInternalFunction parseInternalFunction(TokenPair token, String project, String packageId, PeekableIterator<TokenPair> iterator) {

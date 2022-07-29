@@ -13,6 +13,7 @@ public enum Token {
     REPEAT("repeat *\\("),
     RUN("run *\\("),
     IF("if *\\("),
+    NOTIF("notif *\\("),
     ELSE("else *\\{"),
     OPEN_PARENTHESIS("\\("),
     CLOSED_PARENTHESIS("\\)"),

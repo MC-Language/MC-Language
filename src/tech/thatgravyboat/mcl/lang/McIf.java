@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record McIf(String project, String path, String statement, List<McFunctionData> functions) implements McFunctionData {
+public record McIf(boolean not, String project, String path, String statement, List<McFunctionData> functions) implements McFunctionData {
 
     @Override
     public List<String> data() {
+        if (not) {
+            return List.of(String.format("execute unless %s run function %s:%s/if", statement, project, path));
+        }
         return List.of(String.format("execute if %s run function %s:%s/if", statement, project, path));
     }
 

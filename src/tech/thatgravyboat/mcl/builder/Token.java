@@ -4,17 +4,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum Token {
-    PACKAGE("package"),
-    FUNC("func "),
-    LOAD("@Load"),
-    TICK("@Tick"),
-    TYPE_TICK("@TypeTick *\\("),
-    SELECTOR_TICK("@SelectTick *\\("),
-    REPEAT("repeat *\\("),
-    RUN("run *\\("),
-    IF("if *\\("),
-    NOTIF("notif *\\("),
-    ELSE("else *\\{"),
+    SERVICE("@Service"), // @Service("name")
+    IF("if"), // if (condition) { }
+    NOT_IF("notif"), // notif (condition) { }
+    ELSE("else"), // else { }
+    ECHO("echo"), // echo "message"
     OPEN_PARENTHESIS("\\("),
     CLOSED_PARENTHESIS("\\)"),
     OPEN_BRACKET("\\{"),
@@ -22,7 +16,19 @@ public enum Token {
     COMMA(","),
     PERIOD("\\."),
 
-    STRING("`[^`]+`"),
+    COMPARISON_OPERATOR("==|!=|<=|>=|<|>"),
+    AND("&&"),
+
+    DEFINE(":="),
+    ASSIGNMENT("="),
+    PLUS_ASSIGNMENT("\\+="),
+    MINUS_ASSIGNMENT("-="),
+    MULTIPLY_ASSIGNMENT("\\*="),
+    DIVIDE_ASSIGNMENT("/="),
+    MODULO_ASSIGNMENT("%="),
+
+    STRING("\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\""),
+    STATEMENT("`([^`]*)`"),
     INTEGER("\\d+"),
     IDENTIFIER("[a-z_]+");
 
@@ -31,6 +37,11 @@ public enum Token {
 
     Token(String regex) {
         this.regex = Pattern.compile("^" + regex);
+    }
+
+    Matcher matcher(String input) {
+        var matcher = regex.matcher(input);
+        return matcher.find() ? matcher : null;
     }
 
     int endOfMatch(String s) {

@@ -1,10 +1,11 @@
 package tech.thatgravyboat.mcl.builder;
 
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 
 public class Lexer {
     private final StringBuilder data = new StringBuilder();
-    private String value;
+    private Matcher value;
     private Token token;
     private boolean isFinished;
     private String error;
@@ -46,12 +47,12 @@ public class Lexer {
 
     private boolean hasNewToken() {
         for (Token t : Token.values()) {
-            int end = t.endOfMatch(data.toString());
+            Matcher matcher = t.matcher(data.toString());
 
-            if (end != -1) {
+            if (matcher != null) {
                 token = t;
-                value = data.substring(0, end);
-                data.delete(0, end);
+                value = matcher;
+                data.delete(0, matcher.end());
                 return true;
             }
         }
@@ -63,7 +64,7 @@ public class Lexer {
         return token;
     }
 
-    public String currentValue() {
+    public Matcher currentValue() {
         return value;
     }
 

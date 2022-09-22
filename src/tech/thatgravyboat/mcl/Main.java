@@ -1,15 +1,11 @@
 package tech.thatgravyboat.mcl;
 
-import tech.thatgravyboat.mcl.builder.Compiler;
 import tech.thatgravyboat.mcl.builder.Parser;
 import tech.thatgravyboat.mcl.builder.Tokenizer;
-import tech.thatgravyboat.mcl.lang.Package;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,8 +17,6 @@ public class Main {
             return;
         }
 
-        String projectName = args[0];
-
         List<Path> srcFiles;
 
         try (Stream<Path> walk = Files.walk(Path.of("mcsrc"), 1)) {
@@ -31,12 +25,13 @@ public class Main {
                     .collect(Collectors.toList());
         }
 
-        Map<String, Package> packages = new LinkedHashMap<>();
+        //Map<String, Package> packages = new LinkedHashMap<>();
 
         for (Path srcFile : srcFiles) {
             try {
-                Package pkg = Parser.parse(projectName, Tokenizer.tokenize(Files.readString(srcFile)));
-                if (packages.put(pkg.id(), pkg) != null) throw new IllegalArgumentException("Duplicate package " + pkg.id());
+                var tokenize = Tokenizer.tokenize(Files.readString(srcFile));
+                Parser.parser("mcl_test", tokenize);
+
             }catch (Exception e) {
                 System.out.println("\u001B[31mError parsing file: " + srcFile);
                 System.out.println(e.getMessage());
@@ -45,6 +40,6 @@ public class Main {
             }
         }
 
-        new Compiler(projectName, packages.values()).compile();
+        //new Compiler(projectName, packages.values()).compile();
     }
 }

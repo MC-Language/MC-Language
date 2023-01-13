@@ -1,0 +1,12 @@
+package com.mojang.minecraft;
+
+class difficulty {
+
+    macro setPeaceful() -> "difficulty peaceful";
+
+    macro setEasy() -> "difficulty easy";
+
+    macro setNormal() -> "difficulty normal";
+
+    macro setHard() -> "difficulty hard";
+}

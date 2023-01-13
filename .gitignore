@@ -4,8 +4,6 @@
 
 #MC Language
 *.mcfunction
-*.mcl
-*.mclang
 mcbuild
 mcsrc
 

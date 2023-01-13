@@ -1,0 +1,13 @@
+package com.mojang.minecraft;
+
+class inventory {
+
+    macro clearAll(target: string = "@s")
+        -> "clear ${target}";
+
+    macro clear(target: string = "@s", items: string)
+        -> "clear ${target} ${items}";
+
+    macro give(target: string = "@s", item: string, count: int = 1)
+        -> "give ${target} ${item} ${count}";
+}

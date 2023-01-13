@@ -11,7 +11,7 @@ public class Lexer {
     private String error;
 
     public Lexer(String data) {
-        data.lines().map(text -> text.replaceAll("^\s*#.*$", "")).filter(Predicate.not(String::isBlank)).forEachOrdered(this.data::append);
+        data.lines().map(text -> data.replaceAll("/\\*(\\*(?!/)|[^*])*\\*/", "")).filter(Predicate.not(String::isBlank)).forEachOrdered(this.data::append);
         next();
     }
 
@@ -32,7 +32,7 @@ public class Lexer {
     private void deleteUselessCharacters() {
         int toRemove = 0;
 
-        while (isWhitespaceOrSemicolon(data.charAt(toRemove))) {
+        while (toRemove < data.length() && isWhitespace(data.charAt(toRemove))) {
             toRemove++;
         }
 
@@ -41,8 +41,8 @@ public class Lexer {
         }
     }
 
-    private boolean isWhitespaceOrSemicolon(char c) {
-        return Character.isWhitespace(c) || c == ';';
+    private boolean isWhitespace(char c) {
+        return Character.isWhitespace(c);
     }
 
     private boolean hasNewToken() {

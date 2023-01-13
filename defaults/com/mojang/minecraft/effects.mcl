@@ -1,0 +1,13 @@
+package com.mojang.minecraft;
+
+class effects {
+
+    macro clearAll(target: string = "@s")
+        -> "effect clear ${target}";
+
+    macro clear(target: string = "@s", effect: string)
+        -> "effect clear ${target} ${effect}";
+
+    macro give(target: string = "@s", effect: string, seconds: int = 30, amplifier: int = 0, hide_particles: boolean = false)
+        -> "effect give ${target} ${effect} ${seconds} ${amplifier} ${hide_particles}";
+}

@@ -1,0 +1,19 @@
+package com.mojang.minecraft;
+
+class gamemode {
+
+    macro setDefault(mode: string)
+        -> "defaultgamemode ${mode}";
+
+    macro setSurvival(target: string = "@s")
+        -> "gamemode survival ${target}";
+
+    macro setAdventure(target: string = "@s")
+        -> "gamemode adventure ${target}";
+
+    macro setSpectator(target: string = "@s")
+        -> "gamemode spectator ${target}";
+
+    macro setCreative(target: string = "@s")
+        -> "gamemode creative ${target}";
+}

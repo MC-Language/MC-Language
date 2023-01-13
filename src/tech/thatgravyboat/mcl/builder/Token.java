@@ -4,33 +4,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum Token {
-    SERVICE("@Service"), // @Service("name")
-    IF("if"), // if (condition) { }
-    NOT_IF("notif"), // notif (condition) { }
-    ELSE("else"), // else { }
-    ECHO("echo"), // echo "message"
+    CLASS("class"),
+    PACKAGE("package"),
+    IMPORT("import"),
+    FUNCTION("func"),
+    MARCO("macro"),
+
     OPEN_PARENTHESIS("\\("),
     CLOSED_PARENTHESIS("\\)"),
     OPEN_BRACKET("\\{"),
     CLOSED_BRACKET("\\}"),
+    OPEN_SQUARE_BRACKET("\\["),
+    CLOSED_SQUARE_BRACKET("\\]"),
+
     COMMA(","),
     PERIOD("\\."),
+    COLON(":"),
+    EQUALS("="),
+    SEMICOLON(";"),
 
-    COMPARISON_OPERATOR("==|!=|<=|>=|<|>"),
-    AND("&&"),
-
-    DEFINE(":="),
-    ASSIGNMENT("="),
-    PLUS_ASSIGNMENT("\\+="),
-    MINUS_ASSIGNMENT("-="),
-    MULTIPLY_ASSIGNMENT("\\*="),
-    DIVIDE_ASSIGNMENT("/="),
-    MODULO_ASSIGNMENT("%="),
+    TYPE_RETURN("->"),
 
     STRING("\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\""),
-    STATEMENT("`([^`]*)`"),
-    INTEGER("\\d+"),
-    IDENTIFIER("[a-z_]+");
+    FLOAT("-?[0-9]*[.][0-9]+"),
+    INTEGER("-?\\d+"),
+    IDENTIFIER("[a-zA-Z_]+");
 
     private final Pattern regex;
 
@@ -39,13 +37,20 @@ public enum Token {
         this.regex = Pattern.compile("^" + regex);
     }
 
-    Matcher matcher(String input) {
+    public Matcher matcher(String input) {
         var matcher = regex.matcher(input);
         return matcher.find() ? matcher : null;
     }
 
-    int endOfMatch(String s) {
+    public int endOfMatch(String s) {
         Matcher m = regex.matcher(s);
         return m.find() ? m.end() : -1;
+    }
+
+    public String getContent(Matcher matcher) {
+        return switch (this) {
+            case STRING -> matcher.group(1);
+            default -> matcher.group();
+        };
     }
 }

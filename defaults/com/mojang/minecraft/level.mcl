@@ -1,0 +1,62 @@
+package com.mojang.minecraft;
+
+class level {
+
+    /**
+    * Set Block Macros
+    **/
+    macro setBlock(pos: string, block: string, placement_type: string)
+        -> "setblock ${pos} ${block} ${placement_type}";
+
+    macro setExactBlock(x: int = 0, y: int = 0, z: int = 0, block: string, placement_type: string = "replace")
+        -> "setblock ${x} ${y} ${z} ${block} ${placement_type}";
+
+    macro setGlobalBlock(x: int = 0, y: int = 0, z: int = 0, block: string, placement_type: string = "replace")
+        -> "setblock ~${x} ~${y} ~${z} ${block} ${placement_type}";
+
+    macro setLocalBlock(x: int = 0, y: int = 0, z: int = 0, block: string, placement_type: string = "replace")
+        -> "setblock ^${x} ^${y} ^${z} ${block} ${placement_type}";
+
+    /**
+    * World Border Macros
+    **/
+    macro addBorderDistance(distance: float, time: int = 0)
+        -> "worldborder add ${distance} ${time}";
+
+    macro setBorderCenter(pos: string = "0 0")
+        -> "worldborder center ${pos}";
+
+    macro setExactBorderCenter(x: int = 0, z: int = 0)
+        -> "worldborder center ${x} ${z}";
+
+    macro setGlobalBorderCenter(x: int = 0, z: int = 0)
+        -> "worldborder center ~${x} ~${z}";
+
+    macro setBorderDamage(damage: float = 0.2)
+        -> "worldborder damage amount ${damage}";
+
+    macro setBorderDamageBuffer(distance: float = 5.0)
+        -> "worldborder damage buffer ${distance}";
+
+    macro setBorderDistance(distance: float, time: int = 0)
+        -> "worldborder set ${distance} ${time}";
+
+    macro setBorderWarningDistance(distance: int = 5)
+        -> "worldborder warning distance ${distance}";
+
+    macro setBorderWarningTime(time: int = 15)
+        -> "worldborder warning time ${time}";
+
+    /**
+    * Weather Macros 
+    **/
+    macro clearWeather(time: int = 300)
+        -> "weather clear ${time}";
+
+    macro setRain(time: int = 300)
+        -> "weather clear ${time}";
+
+    macro setThunder(time: int = 300)
+        -> "weather clear ${time}";
+
+}

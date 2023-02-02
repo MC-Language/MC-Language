@@ -11,7 +11,7 @@ public record FileContent(String packagePath, String className, String id, Strin
 
     public String toFile() {
         if (id == null) throw new IllegalStateException("Id cannot be null");
-        return packagePath + "/" + className + "/" + id + ".mcfunction";
+        return packagePath + "/data/functions/" + className + "/" + id + ".mcfunction";
     }
 
     public void writeToFile(String path) {

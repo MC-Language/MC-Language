@@ -18,6 +18,7 @@ public class InstructionHelper {
 
     static {
         reserved.put("if", IfInstruction::of);
+        reserved.put("for", ForInstruction::of);
     }
 
     public static List<Instruction> getInstructions(ClassContext context, String functionId, PeekableIterator<TokenPair> tokens) {

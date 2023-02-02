@@ -1,5 +1,6 @@
 package tech.thatgravyboat.mcl.context.functions;
 
+import org.jetbrains.annotations.Nullable;
 import tech.thatgravyboat.mcl.builder.PeekableIterator;
 import tech.thatgravyboat.mcl.builder.Token;
 import tech.thatgravyboat.mcl.builder.TokenPair;
@@ -17,13 +18,24 @@ import java.util.stream.Collectors;
 import static tech.thatgravyboat.mcl.builder.TokenAssertion.assertIdentifier;
 import static tech.thatgravyboat.mcl.builder.TokenAssertion.assertToken;
 
-public record FunctionContext(String id, ClassContext context, List<Instruction> instructions) {
+public record FunctionContext(@Nullable String event, String id, ClassContext context, List<Instruction> instructions) {
 
     public static FunctionContext of(ClassContext context, PeekableIterator<TokenPair> tokens) {
         String id = assertIdentifier(tokens, true);
         assertToken(Token.OPEN_PARENTHESIS, tokens);
         assertToken(Token.CLOSED_PARENTHESIS, tokens);
-        return new FunctionContext(id, context, InstructionHelper.getInstructions(context, id, tokens));
+        return new FunctionContext(null, id, context, InstructionHelper.getInstructions(context, id, tokens));
+    }
+
+    public static FunctionContext eventOf(ClassContext context, PeekableIterator<TokenPair> tokens) {
+        assertToken(Token.OPEN_PARENTHESIS, tokens);
+        String eventId = assertToken(Token.STRING, tokens).group(1);
+        assertToken(Token.CLOSED_PARENTHESIS, tokens);
+        assertToken(Token.FUNCTION, tokens);
+        String id = assertIdentifier(tokens, true);
+        assertToken(Token.OPEN_PARENTHESIS, tokens);
+        assertToken(Token.CLOSED_PARENTHESIS, tokens);
+        return new FunctionContext(eventId, id, context, InstructionHelper.getInstructions(context, id, tokens));
     }
 
     private String getOutput(Map<ClassContext, ClassContent> context) {

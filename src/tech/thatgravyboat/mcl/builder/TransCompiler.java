@@ -4,14 +4,13 @@ import tech.thatgravyboat.mcl.context.ClassContent;
 import tech.thatgravyboat.mcl.context.ClassContext;
 import tech.thatgravyboat.mcl.context.FileContent;
 import tech.thatgravyboat.mcl.context.functions.FunctionContext;
+import tech.thatgravyboat.mcl.utils.ResourceLocation;
+import tech.thatgravyboat.mcl.utils.SimpleJson;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class TransCompiler {
 
@@ -21,8 +20,8 @@ public class TransCompiler {
         return thread;
     });
 
-
     private final Map<ClassContext, ClassContent> classes;
+    private final Map<String, Collection<String>> events = new ConcurrentHashMap<>();
 
     public TransCompiler(Map<ClassContext, ClassContent> classes) {
         this.classes = new ConcurrentHashMap<>(classes);
@@ -38,6 +37,11 @@ public class TransCompiler {
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
+        for (var entry : events.entrySet()) {
+            ResourceLocation loc = new ResourceLocation(entry.getKey());
+            writeToTagFile(loc.namespace(), loc.path(), entry.getValue());
+        }
+
     }
 
     private CompletableFuture<Boolean> compileClass(ClassContent content) {
@@ -47,6 +51,9 @@ public class TransCompiler {
                 for (FileContent fileContent : function.getFileOutput(classes)) {
                     fileContent.writeToFile("mcbuild");
                     wrote = true;
+                }
+                if (function.event() != null) {
+                    this.events.computeIfAbsent(function.event(), s -> new ConcurrentLinkedQueue<>()).add(function.context().pPackage() + ":" + function.context().pClass() + "/" + function.id());
                 }
             }
             return wrote;
@@ -63,5 +70,21 @@ public class TransCompiler {
             }
         }
         folder.delete();
+    }
+
+    public static void writeToTagFile(String namespace, String path, Collection<String> contents) {
+        File file = new File("mcbuild/" + namespace + "/data/tags/" + path + ".json");
+        file.getParentFile().mkdirs();
+        try {
+            SimpleJson.Object object = new SimpleJson.Object();
+            SimpleJson.Array array = new SimpleJson.Array();
+            for (String content : contents) {
+                array.add(new SimpleJson.DefaultValue(content));
+            }
+            object.put("values", array);
+            Files.write(file.toPath(), object.output().getBytes());
+        }catch (Exception e) {
+            throw new RuntimeException("Failed to write to file " + file.getAbsolutePath(), e);
+        }
     }
 }

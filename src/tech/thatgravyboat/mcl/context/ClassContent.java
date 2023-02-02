@@ -41,6 +41,7 @@ public record ClassContent(
             switch (next.token()) {
                 case MARCO -> defaults.put(MacroContext.of(tokens));
                 case FUNCTION -> functions.put(FunctionContext.of(context, tokens));
+                case EVENT -> functions.put(FunctionContext.eventOf(context, tokens));
                 default -> throw new RuntimeException("Unknown token " + next.token());
             }
         }

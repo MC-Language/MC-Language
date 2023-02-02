@@ -1,0 +1,26 @@
+package tech.thatgravyboat.mclang;
+
+class random {
+
+    macro next_boolean()
+        -> [
+            "summon minecraft:area_effect_cloud ~ ~100 ~ {Duration:5,Tags:['mclang.random'],CustomName:'Random Boolean'}",
+            "execute store result score $random mclang.int run data get entity @e[tag=mclang.random,limit=1] UUID[0]",
+            "scoreboard players set $random_max mclang.int 1",
+            "scoreboard players operation $random mclang.int %= $random_max mclang.int",
+            "kill @e[tag=mclang.random,limit=1]"
+        ];
+
+    macro next_int(min: int = 0, max: int = 2147483647)
+        -> [
+            "summon minecraft:area_effect_cloud ~ ~100 ~ {Duration:5,Tags:['mclang.random'],CustomName:'Random: ${min}-${max}'}",
+            "execute store result score $random mclang.int run data get entity @e[tag=mclang.random,limit=1] UUID[0]",
+            "scoreboard players set $random_min mclang.int ${min}",
+            "scoreboard players set $random_max mclang.int ${max}",
+            "scoreboard players operation $random_max mclang.int -= $random_min mclang.int",
+            "scoreboard players operation $random mclang.int %= $random_max mclang.int",
+            "scoreboard players operation $random mclang.int += $random_min mclang.int",
+            "kill @e[tag=mclang.random,limit=1]"
+        ];
+
+}

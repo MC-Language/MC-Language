@@ -1,0 +1,28 @@
+package tech.thatgravyboat.mclang;
+
+class number {
+
+    macro add(id: string, amount: int = 1)
+        -> [
+            "scoreboard objectives add mclang.int dummy",
+            "scoreboard players add ${id} mclang.int ${amount}"
+        ];
+
+    macro remove(id: string, amount: int = 1)
+        -> [
+            "scoreboard objectives add mclang.int dummy",
+            "scoreboard players remove ${id} mclang.int ${amount}"
+        ];
+
+    macro set(id: string, amount: int)
+        -> [
+            "scoreboard objectives add mclang.int dummy",
+            "scoreboard players set ${id} mclang.int ${amount}"
+        ];
+
+    macro reset(id: string)
+        -> [
+            "scoreboard objectives add mclang.int dummy",
+            "scoreboard players reset ${id} mclang.int"
+        ];
+}

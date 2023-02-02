@@ -9,6 +9,7 @@ public enum Token {
     IMPORT("import"),
     FUNCTION("func"),
     MARCO("macro"),
+    EVENT("@Event"),
 
     OPEN_PARENTHESIS("\\("),
     CLOSED_PARENTHESIS("\\)"),

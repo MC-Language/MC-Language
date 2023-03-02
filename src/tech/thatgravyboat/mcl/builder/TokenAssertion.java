@@ -11,7 +11,7 @@ public class TokenAssertion {
         if (pair.token().equals(token)) {
             return pair.value();
         }
-        throw new RuntimeException("Expected " + token + " but got " + pair.token());
+        throw new RuntimeException("Expected " + token + " but got " + pair.token() + " with value " + pair.value().group());
     }
 
     public static Matcher assertToken(Token token, Iterator<TokenPair> tokens) {

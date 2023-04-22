@@ -20,6 +20,7 @@ public class InstructionHelper {
         reserved.put("if", IfInstruction::of);
         reserved.put("for", ForInstruction::of);
         reserved.put("when", WhenInstruction::of);
+        reserved.put("while", WhileInstruction::of);
     }
 
     public static List<Instruction> getInstructions(ClassContext context, String functionId, PeekableIterator<TokenPair> tokens) {

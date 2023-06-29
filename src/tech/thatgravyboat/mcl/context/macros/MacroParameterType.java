@@ -3,50 +3,33 @@ package tech.thatgravyboat.mcl.context.macros;
 import tech.thatgravyboat.mcl.builder.Token;
 import tech.thatgravyboat.mcl.builder.TokenPair;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public enum MacroParameterType implements Predicate<TokenPair> {
     STRING("string",
-            Token.STRING,
-            pair -> pair.token() == Token.STRING,
-            pair -> pair.value().group(1)
+            pair -> pair.token() == Token.STRING
     ),
     INTEGER("int",
-            Token.INTEGER,
-            pair -> pair.token() == Token.INTEGER,
-            pair -> pair.value().group()
+            pair -> pair.token() == Token.INTEGER
     ),
     FLOAT("float",
-            Token.FLOAT,
-            pair -> pair.token() == Token.FLOAT,
-            pair -> pair.value().group()
+            pair -> pair.token() == Token.FLOAT
     ),
     BOOLEAN("boolean",
-            Token.IDENTIFIER,
-            pair -> pair.token() == Token.IDENTIFIER && ("true".equalsIgnoreCase(pair.value().group()) || "false".equalsIgnoreCase(pair.value().group())),
-            pair -> pair.value().group()
+            pair -> pair.token() == Token.IDENTIFIER && ("true".equalsIgnoreCase(pair.value()) || "false".equalsIgnoreCase(pair.value()))
     );
 
     private final String id;
-    private final Token token;
     private final Predicate<TokenPair> tester;
-    private final Function<TokenPair, String> getter;
 
-    MacroParameterType(String id, Token token, Predicate<TokenPair> tester, Function<TokenPair, String> getter) {
+    MacroParameterType(String id, Predicate<TokenPair> tester) {
         this.id = id;
-        this.token = token;
         this.tester = tester;
-        this.getter = getter;
     }
 
     @Override
     public boolean test(TokenPair pair) {
         return this.tester.test(pair);
-    }
-
-    public String get(TokenPair pair) {
-        return this.getter.apply(pair);
     }
 
     public static MacroParameterType fromId(String id) {

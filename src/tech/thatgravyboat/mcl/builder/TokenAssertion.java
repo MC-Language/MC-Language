@@ -3,18 +3,17 @@ package tech.thatgravyboat.mcl.builder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
 
 public class TokenAssertion {
 
-    public static Matcher assertToken(Token token, TokenPair pair) {
+    public static String assertToken(Token token, TokenPair pair) {
         if (pair.token().equals(token)) {
             return pair.value();
         }
-        throw new RuntimeException("Expected " + token + " but got " + pair.token() + " with value " + pair.value().group());
+        throw new RuntimeException("Expected " + token + " but got " + pair.token() + " with value " + pair.value());
     }
 
-    public static Matcher assertToken(Token token, Iterator<TokenPair> tokens) {
+    public static String assertToken(Token token, Iterator<TokenPair> tokens) {
         if (tokens.hasNext()) {
             return assertToken(token, tokens.next());
         }
@@ -38,7 +37,7 @@ public class TokenAssertion {
 
     public static String assertIdentifier(TokenPair pair, boolean requireLower, String message) {
         if (pair.token().equals(Token.IDENTIFIER)) {
-            String value = pair.value().group();
+            String value = pair.value();
             if (requireLower && !value.toLowerCase().equals(value)) {
                 if (message != null) {
                     throw new RuntimeException("Expected lower case identifier but got normal casing for " + message + " with value " + value);
@@ -66,14 +65,14 @@ public class TokenAssertion {
             boolean comma = true;
             while (!isToken(Token.CLOSED_SQUARE_BRACKET, tokens)) {
                 if (!comma) throw new RuntimeException("Expected comma");
-                output.add(assertToken(Token.STRING, tokens).group(1));
+                output.add(assertToken(Token.STRING, tokens));
                 comma = isToken(Token.COMMA, tokens);
             }
             if (comma) throw new RuntimeException("Trailing comma");
             TokenAssertion.assertToken(Token.SEMICOLON, tokens);
             return String.join("\n", output);
         }
-        String returnType = TokenAssertion.assertToken(Token.STRING, tokens).group(1);
+        String returnType = TokenAssertion.assertToken(Token.STRING, tokens);
         TokenAssertion.assertToken(Token.SEMICOLON, tokens);
         return returnType;
     }
@@ -83,7 +82,7 @@ public class TokenAssertion {
         while (tokens.hasNext() && !tokens.peek().token().equals(Token.SEMICOLON)) {
             Token token = tokens.peek().token();
             if (token.equals(Token.IDENTIFIER) || token.equals(Token.PERIOD)) {
-                builder.append(tokens.next().value().group());
+                builder.append(tokens.next().value());
             } else {
                 throw new RuntimeException("Expected identifier but got " + token);
             }

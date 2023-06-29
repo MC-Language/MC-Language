@@ -18,11 +18,11 @@ public record IfInstruction(ClassContext context, String id, String statement, L
 
     public static IfInstruction of(int index, String ignoredId, ClassContext context, String functionId, PeekableIterator<TokenPair> tokens) {
         assertToken(Token.OPEN_PARENTHESIS, tokens);
-        String statement = assertToken(Token.STRING, tokens).group(1);
+        String statement = assertToken(Token.STRING, tokens);
         assertToken(Token.CLOSED_PARENTHESIS, tokens);
         List<Instruction> instructions = InstructionHelper.getInstructions(context, functionId + "_if_" + index, tokens);
         TokenPair pair = tokens.peek();
-        if (pair.token() == Token.IDENTIFIER && pair.value().group().equals("else")) {
+        if (pair.token() == Token.IDENTIFIER && pair.value().equals("else")) {
             assertToken(Token.IDENTIFIER, tokens);
             List<Instruction> elseInstructions = InstructionHelper.getInstructions(context, functionId + "_if_" + index + "_else", tokens);
             return new IfInstruction(context, functionId + "_if_" + index, statement, instructions, elseInstructions);

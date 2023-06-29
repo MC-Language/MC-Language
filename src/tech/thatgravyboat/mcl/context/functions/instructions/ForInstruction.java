@@ -18,10 +18,10 @@ public record ForInstruction(ClassContext context, String id, int start, int end
 
     public static ForInstruction of(int index, String ignoredId, ClassContext context, String functionId, PeekableIterator<TokenPair> tokens) {
         assertToken(Token.OPEN_PARENTHESIS, tokens);
-        int start = Integer.parseInt(assertToken(Token.INTEGER, tokens).group());
+        int start = Integer.parseInt(assertToken(Token.INTEGER, tokens));
         assertToken(Token.PERIOD, tokens);
         assertToken(Token.PERIOD, tokens);
-        int end = Integer.parseInt(assertToken(Token.INTEGER, tokens).group());
+        int end = Integer.parseInt(assertToken(Token.INTEGER, tokens));
         assertToken(Token.CLOSED_PARENTHESIS, tokens);
         List<Instruction> instructions = InstructionHelper.getInstructions(context, functionId + "_for_" + index, tokens);
         return new ForInstruction(context, functionId + "_for_" + index, start, end, instructions);

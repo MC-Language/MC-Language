@@ -28,7 +28,7 @@ public class MacroParameter {
         if (!type.test(pair)) {
             throw new RuntimeException("Expected token " + type + " but got " + pair.token());
         }
-        return type.get(pair);
+        return pair.value();
     }
 
 }

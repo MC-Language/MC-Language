@@ -1,14 +1,12 @@
 package tech.thatgravyboat.mcl.builder;
 
-import java.util.regex.Matcher;
-
-public record TokenPair(Matcher value, Token token) {
+public record TokenPair(String value, Token token) {
 
 
     @Override
     public String toString() {
         return "TokenPair{" +
-                "value=" + value.group() +
+                "value=" + value +
                 ", token=" + token +
                 '}';
     }

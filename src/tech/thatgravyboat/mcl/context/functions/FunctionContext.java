@@ -29,7 +29,7 @@ public record FunctionContext(@Nullable String event, String id, ClassContext co
 
     public static FunctionContext eventOf(ClassContext context, PeekableIterator<TokenPair> tokens) {
         assertToken(Token.OPEN_PARENTHESIS, tokens);
-        String eventId = assertToken(Token.STRING, tokens).group(1);
+        String eventId = assertToken(Token.STRING, tokens);
         assertToken(Token.CLOSED_PARENTHESIS, tokens);
         assertToken(Token.FUNCTION, tokens);
         String id = assertIdentifier(tokens, true);

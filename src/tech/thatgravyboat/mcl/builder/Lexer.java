@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 
 public class Lexer {
     private final StringBuilder data = new StringBuilder();
-    private Matcher value;
+    private String value;
     private Token token;
     private boolean isFinished;
     private String error;
@@ -47,11 +47,11 @@ public class Lexer {
 
     private boolean hasNewToken() {
         for (Token t : Token.values()) {
-            Matcher matcher = t.matcher(data.toString());
+            Matcher matcher = t.matcher(data);
 
             if (matcher != null) {
                 token = t;
-                value = matcher;
+                value = t.getContent(matcher);
                 data.delete(0, matcher.end());
                 return true;
             }
@@ -64,7 +64,7 @@ public class Lexer {
         return token;
     }
 
-    public Matcher currentValue() {
+    public String currentValue() {
         return value;
     }
 

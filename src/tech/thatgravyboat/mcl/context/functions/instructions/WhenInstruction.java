@@ -35,7 +35,7 @@ public record WhenInstruction(ClassContext context, String id, PairList<String, 
     private static Pair<String, List<Instruction>> parseCase(int whenIndex, String id, ClassContext context, PeekableIterator<TokenPair> tokens) {
         String s = assertIdentifier(tokens, true, "Expected case keyword.");
         if (!s.equals("case")) throw new RuntimeException("Expected case keyword but got: " + s);
-        String statement = assertToken(Token.STRING, tokens).group(1);
+        String statement = assertToken(Token.STRING, tokens);
         assertToken(Token.COLON, tokens);
         List<Instruction> instructions = InstructionHelper.getInstructions(context, id + "_" + whenIndex, tokens);
         return new Pair<>(statement, instructions);
@@ -45,11 +45,10 @@ public record WhenInstruction(ClassContext context, String id, PairList<String, 
     public String getOutput(Map<ClassContext, ClassContent> context) {
         String output = "scoreboard objectives add mclang.int dummy";
         output += "\nscoreboard players set $" + id + " mclang.int 0";
-        output += "\nscoreboard players set $false mclang.int 0";
         for (var statement : statements) {
             var value = statement.b();
             var state = value.a();
-            output += "\nexecute if score %s mclang.int = $false mclang.int if %s run function %s".formatted(
+            output += "\nexecute if score $%s mclang.int matches 0 if %s run function %s".formatted(
                     id, state, this.context.pPackage() + ":" + this.context.pClass() + "/" + statement.a());
         }
         return output;

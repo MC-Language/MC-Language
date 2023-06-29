@@ -73,7 +73,7 @@ public class TransCompiler {
     }
 
     public static void writeToTagFile(String namespace, String path, Collection<String> contents) {
-        File file = new File("mcbuild/" + namespace + "/data/tags/" + path + ".json");
+        File file = new File("mcbuild/data/" + namespace + "/tags/functions/" + path + ".json");
         file.getParentFile().mkdirs();
         try {
             SimpleJson.Object object = new SimpleJson.Object();

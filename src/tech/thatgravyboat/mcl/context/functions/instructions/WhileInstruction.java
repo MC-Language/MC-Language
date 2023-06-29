@@ -18,7 +18,7 @@ public record WhileInstruction(ClassContext context, String id, String statement
 
     public static WhileInstruction of(int index, String ignoredId, ClassContext context, String functionId, PeekableIterator<TokenPair> tokens) {
         assertToken(Token.OPEN_PARENTHESIS, tokens);
-        String statement = assertToken(Token.STRING, tokens).group(1);
+        String statement = assertToken(Token.STRING, tokens);
         assertToken(Token.CLOSED_PARENTHESIS, tokens);
         List<Instruction> instructions = InstructionHelper.getInstructions(context, functionId + "_while_" + index, tokens);
         return new WhileInstruction(context, functionId + "_while_" + index, statement, instructions);

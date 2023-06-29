@@ -42,7 +42,7 @@ public record MacroContext(String id, String output, Set<String> requiredKeys, M
             throw new RuntimeException("Invalid parameter type default value" + next);
         }
 
-        MacroParameter parameter = new MacroParameter(type, type.get(next));
+        MacroParameter parameter = new MacroParameter(type, next.value());
         isToken(Token.COMMA, tokens);
         return parameter;
     }
@@ -55,7 +55,7 @@ public record MacroContext(String id, String output, Set<String> requiredKeys, M
         }
         String output = this.output;
         for (var entry : parameters.entrySet()) {
-        output = output.replace("${" + entry.getKey() + "}", entry.getValue().get(inputs.get(entry.getKey())));
+        output = output.replace("${" + entry.getKey() + "}", entry.getValue().get(inputs.get(entry.getKey())).replace("\\\"", "\""));
         }
         return output;
     }

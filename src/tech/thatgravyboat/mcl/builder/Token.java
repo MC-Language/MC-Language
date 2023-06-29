@@ -38,7 +38,7 @@ public enum Token {
         this.regex = Pattern.compile("^" + regex);
     }
 
-    public Matcher matcher(String input) {
+    public Matcher matcher(StringBuilder input) {
         var matcher = regex.matcher(input);
         return matcher.find() ? matcher : null;
     }
